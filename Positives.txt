@@ -1,0 +1,41 @@
+1. Meta-learning (learning to learn)
+
+2. Curriculum learning (intelligent data sequencing)
+
+3. Reinforcement learning (training a teacher to guide the student)
+
+4. NLP and transfer learning (with BERT embeddings)
+
+5. Curriculum is a stepping stone to:
+
+Adaptive sampling (based on feedback)
+
+Multi-task learning (easy → hard tasks)
+
+Continual learning (new tasks without forgetting)
+
+6. “Even though final accuracy is comparable, curriculum learning offers faster convergence, interpretability, and a reusable structure for scaling to harder or evolving tasks. Our RL-based difficulty estimation builds a foundation for intelligent training beyond fixed epochs or static datasets — and that’s the real long-term value.”
+
+7. "Curriculum Resists Overfitting at Scale"
+
+8. “Our RL-based curriculum learning framework achieves comparable or better generalization to standard training, while reducing training time by 50% and mitigating overfitting. By learning a difficulty-based sample schedule using PPO and enforcing structured training dynamics, we make learning more efficient and interpretable — with no human-defined curriculum.”
+
+-------------------------------------------------
+❌ Arguments against continuing:
+The performance gap over random curriculum is marginal (often <0.3%).
+
+You’ve had to set up PPO training, difficulty score extraction, regressor fitting, and bucketing — a lot of engineering overhead.
+
+Reviewers or professors may ask: “Why not just do stratified or confidence-based sampling?”
+
+You haven't yet shown a clear generalization win over simpler curriculum or even vanilla.
+
+✅ Arguments for showcasing this:
+Your pipeline is real and demonstrates an end-to-end reinforcement learning–driven curriculum system.
+
+While accuracy is similar, curriculum trains faster, overfits less, and has better stability in early training phases.
+
+The difficulty estimation architecture is reusable — it can be applied to other tasks, possibly with bigger payoff.
+
+You're already seeing differentiation in training curves — possibly in longer training runs or with smaller models / harder datasets, the gap will widen.
+-------------------------------------------------
