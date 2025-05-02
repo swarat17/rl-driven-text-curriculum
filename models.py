@@ -28,6 +28,26 @@ class SimpleClassifier(nn.Module):
     def forward(self, x):
         return self.fc(x)
     
+class ImprovedClassifier(nn.Module):
+    def __init__(self, input_dim=768, num_classes=4, dropout_rate=0.3):
+        super().__init__()
+        self.fc = nn.Sequential(
+            nn.Linear(input_dim, 256),  # increased capacity
+            nn.ReLU(),
+            nn.BatchNorm1d(256),        # stabilizes training
+            nn.Dropout(dropout_rate),   # regularization
+
+            nn.Linear(256, 128),
+            nn.ReLU(),
+            nn.BatchNorm1d(128),
+            nn.Dropout(dropout_rate),
+
+            nn.Linear(128, num_classes)
+        )
+
+    def forward(self, x):
+        return self.fc(x)
+
 class DifficultyRegressor(nn.Module):
     def __init__(self, input_dim=768):
         super().__init__()

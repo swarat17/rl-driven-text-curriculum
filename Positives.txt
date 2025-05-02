@@ -39,3 +39,30 @@ The difficulty estimation architecture is reusable — it can be applied to othe
 
 You're already seeing differentiation in training curves — possibly in longer training runs or with smaller models / harder datasets, the gap will widen.
 -------------------------------------------------
+
+✅ 3. Curriculum Transferability
+Test:
+
+“Are the difficulty buckets transferable across models?”
+
+🧪 How:
+Train PPO+Curriculum using SimpleClassifier
+
+Train another model (e.g., Transformer, deeper MLP) on same buckets
+
+📊 Show:
+
+That bucket definitions generalize across models
+
+Optional: use KL-divergence between predicted distributions across models per bucket
+-------------------------------------------------
+
+✅ This proves your difficulty estimator is model-agnostic.
+
+Use Case			What It Shows
+Training on Easy+Medium		Faster, resource-efficient training
+Model Failure Localization	Buckets help in diagnosis
+Cross-model Transfer		Buckets generalize, not overfit
+Active Learning / Label 	Prioritization	Buckets = label budget optimizer
+Robustness under Noise		Curriculum = stability under perturbation
+Explainability	Buckets 	reflect real semantic hardness
