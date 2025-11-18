@@ -1,17 +1,20 @@
 # 🧠 Curriculum Learning for Text Classification via PPO-Based Difficulty Estimation
 
-This repository implements a reinforcement learning-guided curriculum learning pipeline for efficient and robust text classification using pretrained language model embeddings (e.g., BERT). The core idea is to estimate sample difficulty using a PPO agent and train classifiers progressively on increasingly harder samples.
+This repository implements a Reinforcement Learning–guided curriculum learning pipeline for NLP classification using BERT embeddings. A PPO agent interacts with a custom environment to estimate per-sample difficulty scores. These scores train a Difficulty Estimator (regression model) that can later generate difficulty values without running RL again — making the approach scalable and reusable.
+
+The curriculum buckets (Easy → Medium → Hard) are then used to train classifiers using multiple curriculum strategies.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-├── cache_embeddings.py             # Extract BERT embeddings and cache them to disk
-├── train-test.py                   # Train/test split and save for further processing
-├── train_estimator_rl.ipynb        # Train PPO agent and regression-based difficulty estimator
-├── sort_and_bucket_difficulty.py   # Sort samples by difficulty and split into curriculum buckets
-├── test_estimator.ipynb            # Train and evaluate classifiers using different curriculum strategies
+├── cache_embeddings.py                  # Extract BERT embeddings using HuggingFace
+├── models.py                            # DifficultyEstimator, SimpleClassifier, ImprovedClassifier
+├── train-test.py                        # Split cached embeddings into train/test datasets
+├── train_estimator_rl_new.ipynb         # PPO agent + regression difficulty estimator training
+├── sort_and_bucket_difficulty_new.py    # Convert difficulty scores into Easy/Medium/Hard buckets
+├── test_estimator_new.ipynb             # Curriculum training experiments & evaluation
 ```
 
 ---
@@ -64,7 +67,7 @@ python train-test.py
 Open and run all cells in:
 
 ```bash
-train_estimator_rl.ipynb
+train_estimator_rl_new.ipynb
 ```
 - Trains a PPO agent using Gym-style environment
 - Converts agent rollouts into difficulty scores
@@ -75,7 +78,7 @@ train_estimator_rl.ipynb
 
 ### ✅ Step 4: Sort and Bucket Data
 ```bash
-python sort_and_bucket_difficulty.py
+python sort_and_bucket_difficulty_new.py
 ```
 - Uses difficulty scores to divide data into easy, medium, and hard buckets
 - Saves bucketed train sets
@@ -86,7 +89,7 @@ python sort_and_bucket_difficulty.py
 Open and run:
 
 ```bash
-test_estimator.ipynb
+test_estimator_new.ipynb
 ```
 - Trains classifiers using:
   - Vanilla (full data at once)
@@ -98,11 +101,37 @@ test_estimator.ipynb
 
 ---
 
+🧩 Models Used (from models.py)
+- DifficultyEstimator (Regression Model)
+  - Learns PPO-generated difficulty scores
+  - Predicts difficulty for new samples
+  - Uses a temperature scaling term to expand score resolution
+  - Used only at inference, not part of the classifier
+  - Key for reproducible bucket generation
+
+- SimpleClassifier
+  - Light 2-layer MLP
+  - Used inside PPO environment (fast RL loop)
+
+- ImprovedClassifier
+  - Larger network with BatchNorm + Dropout
+  - Used in final curriculum evaluation
+  - More stable and expressive than SimpleClassifier
+
 ## 📊 Results Summary
 
-- Curriculum learning using PPO-estimated difficulty scores improves generalization and training efficiency.
-- Achieved up to **0.6% higher test accuracy** while **reducing training time by over 50%** compared to vanilla training.
-- All experiments are reproducible with saved checkpoints and logs.
+The project demonstrates that:
+- PPO produces meaningful difficulty scores
+- DifficultyEstimator captures these scores accurately
+- Buckets display clear performance separation
+  - Easy bucket → 98–100% accuracy
+  - Medium bucket → ~90% accuracy
+  - Hard bucket → noticeably harder
+- Curriculum training improves:
+  - Convergence speed (up to 60% faster)
+  - Stability in early training
+  - Interpretability of training dynamics
+- Even if accuracy gains are small, the pipeline is novel and robust
 
 ---
 
