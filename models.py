@@ -47,15 +47,3 @@ class ImprovedClassifier(nn.Module):
 
     def forward(self, x):
         return self.fc(x)
-
-class DifficultyRegressor(nn.Module):
-    def __init__(self, input_dim=768):
-        super().__init__()
-        self.model = nn.Sequential(
-            nn.Linear(input_dim, 128),
-            nn.ReLU(),
-            nn.Linear(128, 1),
-            nn.Sigmoid()  # optional
-        )
-    def forward(self, x):
-        return self.model(x)

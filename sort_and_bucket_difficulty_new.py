@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from models import DifficultyEstimator  # Ensure this is correctly imported
+from models import DifficultyEstimator
 
 def score_and_bucket(embedding_path, estimator_path, output_path, device='cuda'):
     print("Loading data...")
@@ -38,7 +38,6 @@ def score_and_bucket(embedding_path, estimator_path, output_path, device='cuda')
     print(f"Saved difficulty buckets to {output_path}")
 
 
-# Example usage
 if __name__ == "__main__":
     score_and_bucket(
         embedding_path="bert_embeddings_train.npz",
